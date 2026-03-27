@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="theme-color" content="#6366f1">
+    <title>ShoppingMall.Com | বাংলাদেশের অনলাইন শপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+        }
+
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #e2e8f0;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --card-hover: 0 25px 35px -12px rgba(0, 0, 0, 0.15);
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #cbd5e1;
+            --border: #334155;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            padding-bottom: 70px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text);
+            position: relative;
+            padding: 10px;
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-2px);
+            border-color: transparent;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 30px;
+            padding: 2px 6px;
+            min-width: 20px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            background: var(--surface);
+            padding: 1rem 1.5rem;
+            border-radius: 80px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 200px;
+            display: flex;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 60px;
+            padding: 0.7rem 1.2rem;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+        }
+
+        select {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 0.7rem 1.2rem;
+            border-radius: 60px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select:hover {
+            border-color: var(--primary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card {
+            background: var(--surface);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.4s;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-hover);
+        }
+
+        .product-image-container {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        .badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--gradient);
+            color: white;
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-row {
+            display: flex;
+            gap: 0.8rem;
+            align-items: baseline;
+            margin: 0.5rem 0;
+        }
+
+        .current-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .rating {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .rating i {
+            color: #fbbf24;
+        }
+
+        .stock {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .in-stock { color: var(--success); }
+        .out-stock { color: var(--danger); }
+
+        .size-select {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            margin: 0.8rem 0;
+            cursor: pointer;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            border: none;
+            padding: 0.7rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--gradient-hover);
+            transform: scale(1.02);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            border-radius: 2rem;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--surface);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            border-top: 1px solid var(--border);
+            z-index: 99;
+            backdrop-filter: blur(20px);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+        
+        .nav-item i {
+            font-size: 1.4rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .nav-item:hover {
+            color: var(--primary);
+            background: var(--bg);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            background: var(--surface);
+            color: var(--text);
+            padding: 14px 20px;
+            border-radius: 60px;
+            text-align: center;
+            z-index: 1100;
+            animation: slideUp 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--gradient);
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            z-index: 90;
+            transition: all 0.3s;
+        }
+
+        .scroll-top:hover {
+            transform: scale(1.1);
+        }
+
+        .payment-account-info {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .delivery-fee-info {
+            background: var(--bg);
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="nav-bar container">
+        <div class="logo" id="logoHome">
+            <i class="fas fa-store"></i>
+            <span>ShoppingMall</span>
+        </div>
+        <div class="nav-actions">
+            <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+            <button class="icon-btn" id="cartIconBtn"><i class="fas fa-shopping-cart"></i><span id="cartCount" class="cart-badge">0</span></button>
+            <button class="icon-btn" id="userBtn"><i class="fas fa-user-circle"></i></button>
+        </div>
+    </div>
+</div>
+
+<main class="container">
+    <div id="productsSection">
+        <div class="filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="পণ্য খুঁজুন...">
+            </div>
+            <select id="categoryFilter">
+                <option value="all">সব বিভাগ</option>
+                <option value="clothing">পোশাক</option>
+                <option value="electronics">ইলেকট্রনিক্স</option>
+                <option value="accessories">এক্সেসরিজ</option>
+            </select>
+            <select id="sortSelect">
+                <option value="default">সাজান</option>
+                <option value="price_asc">দাম: কম থেকে বেশি</option>
+                <option value="price_desc">দাম: বেশি থেকে কম</option>
+            </select>
+        </div>
+        <div class="products-grid" id="productsContainer">
+            <div style="text-align:center; padding:2rem;">লোড হচ্ছে...</div>
+        </div>
+    </div>
+</main>
+
+<!-- Modals -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 style="text-align:center;">🔐 লগইন করুন</h3>
+        <div class="form-group">
+            <label>ইমেইল</label>
+            <input type="email" id="modalLoginEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="modalLoginPassword" placeholder="******">
+        </div>
+        <button id="modalLoginBtn" class="btn-primary" style="width:100%;">লগইন করুন</button>
+        <p style="margin:15px 0; text-align:center;">📱 ডেমো: demo@mall.com / 1234</p>
+        <button id="modalSwitchToRegister" style="background:none; color:var(--primary); border:none; width:100%;">✨ নতুন অ্যাকাউন্ট তৈরি করুন</button>
+        <button id="closeLoginModal" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div id="registerModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 style="text-align:center;">📝 রেজিস্ট্রেশন</h3>
+        <div class="form-group">
+            <label>আপনার নাম</label>
+            <input type="text" id="regName" placeholder="আপনার নাম">
+        </div>
+        <div class="form-group">
+            <label>ইমেইল</label>
+            <input type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="regPassword" placeholder="******">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড নিশ্চিত করুন</label>
+            <input type="password" id="regConfirmPassword" placeholder="******">
+        </div>
+        <button id="registerSubmitBtn" class="btn-primary" style="width:100%;">রেজিস্ট্রার করুন</button>
+        <button id="modalSwitchToLogin" style="background:none; color:var(--primary); border:none; width:100%; margin-top:10px;">🔑 ইতিমধ্যে অ্যাকাউন্ট আছে?</button>
+        <button id="closeRegisterModal" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div id="cartModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3><i class="fas fa-shopping-cart"></i> আমার কার্ট</h3>
+        <div id="cartItemsList"></div>
+        <div id="cartSummary"></div>
+        <button id="checkoutBtn" class="btn-primary" style="width:100%; margin-top:1rem;">🚚 চেকআউট</button>
+        <button id="closeCart" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div id="checkoutModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3><i class="fas fa-truck"></i> ডেলিভারি তথ্য</h3>
+        <div class="form-group">
+            <label>পূর্ণ নাম</label>
+            <input id="deliveryName" placeholder="আপনার নাম">
+        </div>
+        <div class="form-group">
+            <label>মোবাইল নম্বর</label>
+            <input id="deliveryPhone" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group">
+            <label>বিভাগ নির্বাচন করুন</label>
+            <select id="deliveryDivision">
+                <option value="">বিভাগ নির্বাচন করুন</option>
+                <option value="ঢাকা">ঢাকা বিভাগ</option>
+                <option value="চট্টগ্রাম">চট্টগ্রাম বিভাগ</option>
+                <option value="রাজশাহী">রাজশাহী বিভাগ</option>
+                <option value="খুলনা">খুলনা বিভাগ</option>
+                <option value="বরিশাল">বরিশাল বিভাগ</option>
+                <option value="সিলেট">সিলেট বিভাগ</option>
+                <option value="রংপুর">রংপুর বিভাগ</option>
+                <option value="ময়মনসিংহ">ময়মনসিংহ বিভাগ</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>জেলা নির্বাচন করুন</label>
+            <select id="deliveryDistrict" disabled>
+                <option value="">প্রথমে বিভাগ নির্বাচন করুন</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>বিস্তারিত ঠিকানা</label>
+            <textarea id="deliveryAddress" rows="2" placeholder="থানা, গ্রাম/রোড, বাড়ি নং"></textarea>
+        </div>
+        <div class="delivery-fee-info" id="deliveryFeeInfo">
+            <i class="fas fa-info-circle"></i> ডেলিভারি চার্জ: জেলা নির্বাচনের পরে দেখানো হবে
+        </div>
+        <div class="form-group">
+            <label>পেমেন্ট পদ্ধতি</label>
+            <select id="paymentMethod">
+                <option value="cod">💵 ক্যাশ অন ডেলিভারি</option>
+                <option value="bkash">📱 bKash</option>
+                <option value="nagad">📱 Nagad</option>
+                <option value="rocket">📱 Rocket</option>
+            </select>
+        </div>
+        <div id="accountInfoPanel" class="payment-account-info" style="display:none;">
+            <div id="accountDetails"></div>
+            <div class="form-group">
+                <label>যে নম্বর থেকে পেমেন্ট করেছেন</label>
+                <input id="senderNumber" type="text" placeholder="01XXXXXXXXX">
+            </div>
+            <div class="form-group">
+                <label>ট্রানজেকশন আইডি</label>
+                <input id="transactionId" type="text" placeholder="TRX ID">
+            </div>
+        </div>
+        <button id="confirmOrderBtn" class="btn-primary" style="width:100%;">✅ অর্ডার কনফার্ম</button>
+        <button id="closeCheckout" style="margin-top:10px; background:none; width:100%;">বাতিল</button>
+    </div>
+</div>
+
+<div id="profileModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3><i class="fas fa-user-circle"></i> আমার প্রোফাইল</h3>
+        <div id="profileEmail" style="padding:12px; background:var(--bg); border-radius:12px; margin:1rem 0;"></div>
+        <button id="logoutBtn" class="btn-primary" style="width:100%;">🚪 লগআউট</button>
+        <button id="closeProfile" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div id="ordersModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3><i class="fas fa-truck"></i> আমার অর্ডারসমূহ</h3>
+        <div id="ordersList"></div>
+        <button id="closeOrders" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div id="wishlistModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3><i class="fas fa-heart"></i> আমার উইশলিস্ট</h3>
+        <div id="wishlistItems"></div>
+        <button id="closeWishlist" style="margin-top:10px; background:none; width:100%;">বন্ধ করুন</button>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <button class="nav-item" data-nav="home"><i class="fas fa-home"></i><span>হোম</span></button>
+    <button class="nav-item" data-nav="wishlist"><i class="fas fa-heart"></i><span>উইশলিস্ট</span></button>
+    <button class="nav-item" data-nav="orders"><i class="fas fa-truck"></i><span>অর্ডার</span></button>
+    <button class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>প্রোফাইল</span></button>
+</div>
+
+<div id="scrollTopBtn" class="scroll-top" style="display:none;"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    // API Configuration
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000/api' 
+        : '/api';
+
+    // Districts Data
+    const districtsByDivision = {
+        "ঢাকা": ["ঢাকা", "গাজীপুর", "নারায়ণগঞ্জ", "টাঙ্গাইল", "কিশোরগঞ্জ", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নরসিংদী", "ফরিদপুর", "গোপালগঞ্জ", "মাদারীপুর", "রাজবাড়ী", "শরীয়তপুর"],
+        "চট্টগ্রাম": ["চট্টগ্রাম", "কক্সবাজার", "কুমিল্লা", "ফেনী", "ব্রাহ্মণবাড়িয়া", "রাঙ্গামাটি", "খাগড়াছড়ি", "বান্দরবান", "নোয়াখালী", "লক্ষ্মীপুর", "চাঁদপুর"],
+        "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "চাঁপাইনবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"],
+        "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"],
+        "বরিশাল": ["বরিশাল", "ঝালকাঠি", "পটুয়াখালী", "ভোলা", "পিরোজপুর", "বরগুনা"],
+        "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"],
+        "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"],
+        "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোণা"]
+    };
+
+    const paymentAccounts = {
+        bkash: { name: "bKash", number: "01712345678" },
+        nagad: { name: "Nagad", number: "01612345678" },
+        rocket: { name: "Rocket", number: "01512345678" }
+    };
+
+    let currentUser = null;
+    let cart = [];
+    let wishlist = [];
+    let orders = [];
+    let globalProducts = [];
+
+    const STORAGE_KEYS = {user:"sm_user", cart:"sm_cart", wishlist:"sm_wish", orders:"sm_orders"};
+
+    // Helper Functions
+    function showToast(msg, type="info") { 
+        let t = document.createElement("div"); 
+        t.className="toast"; 
+        t.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${msg}`; 
+        document.body.appendChild(t); 
+        setTimeout(()=>t.remove(),2800); 
+    }
+
+    function updateCartBadge() { 
+        let total = cart.reduce((s,i)=>s+i.quantity,0); 
+        document.getElementById("cartCount").innerText=total; 
+    }
+
+    function getProductPrice(product, sizeName) {
+        let sizeObj = product.sizes.find(s => s.name === sizeName);
+        return sizeObj ? sizeObj.price : product.basePrice;
+    }
+
+    function getDeliveryCharge(district) {
+        return district === "ঢাকা" ? 60 : 100;
+    }
+
+    function updateDistricts() {
+        const division = document.getElementById("deliveryDivision").value;
+        const districtSelect = document.getElementById("deliveryDistrict");
+        const deliveryFeeInfo = document.getElementById("deliveryFeeInfo");
+        
+        if(division && districtsByDivision[division]) {
+            districtSelect.disabled = false;
+            districtSelect.innerHTML = '<option value="">জেলা নির্বাচন করুন</option>' + 
+                districtsByDivision[division].map(d => `<option value="${d}">${d}</option>`).join('');
+            deliveryFeeInfo.innerHTML = `<i class="fas fa-info-circle"></i> জেলা নির্বাচন করলে ডেলিভারি চার্জ দেখাবে`;
+        } else {
+            districtSelect.disabled = true;
+            districtSelect.innerHTML = '<option value="">প্রথমে বিভাগ নির্বাচন করুন</option>';
+            deliveryFeeInfo.innerHTML = `<i class="fas fa-info-circle"></i> ডেলিভারি চার্জ: জেলা নির্বাচনের পরে দেখানো হবে`;
+        }
+        districtSelect.value = "";
+    }
+
+    function updateDeliveryFee() {
+        const district = document.getElementById("deliveryDistrict").value;
+        const deliveryFeeInfo = document.getElementById("deliveryFeeInfo");
+        if(district) {
+            const charge = district === "ঢাকা" ? 60 : 100;
+            deliveryFeeInfo.innerHTML = `<i class="fas fa-truck"></i> ডেলিভারি চার্জ: <strong>৳${charge}</strong> (${district === "ঢাকা" ? "ঢাকা জেলা" : "ঢাকার বাইরের জেলা"})`;
+        } else {
+            deliveryFeeInfo.innerHTML = `<i class="fas fa-info-circle"></i> জেলা নির্বাচন করলে ডেলিভারি চার্জ দেখাবে`;
+        }
+    }
+
+    function updateAccountInfo() {
+        let method = document.getElementById("paymentMethod").value;
+        let panel = document.getElementById("accountInfoPanel");
+        if(method !== "cod") {
+            panel.style.display = "block";
+            let account = paymentAccounts[method];
+            document.getElementById("accountDetails").innerHTML = `
+                <div style="background:var(--primary); color:white; padding:12px; border-radius:12px; text-align:center;">
+                    <div>${account.name} নম্বর</div>
+                    <div style="font-size:1.3rem; font-weight:bold;">${account.number}</div>
+                </div>`;
+        } else panel.style.display = "none";
+    }
+
+    function showLoginPrompt() { 
+        document.getElementById("loginModal").style.display = "flex"; 
+    }
+
+    function closeAllModals() { 
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); 
+    }
+
+    function saveToLocal() { 
+        if(currentUser) { 
+            localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(currentUser)); 
+            localStorage.setItem(STORAGE_KEYS.cart+currentUser.id, JSON.stringify(cart)); 
+            localStorage.setItem(STORAGE_KEYS.wishlist+currentUser.id, JSON.stringify(wishlist)); 
+            localStorage.setItem(STORAGE_KEYS.orders+currentUser.id, JSON.stringify(orders)); 
+        } 
+    }
+
+    // API Functions
+    async function loadProductsFromAPI() {
+        try {
+            const response = await fetch(`${API_URL}/products`);
+            if (!response.ok) throw new Error('Failed to load products');
+            const products = await response.json();
+            return products.map(p => ({
+                id: p.id,
+                name: p.name,
+                category: p.category,
+                basePrice: p.base_price,
+                oldPrice: p.old_price,
+                image: p.image,
+                sizes: p.sizes,
+                stock: p.stock,
+                rating: p.rating,
+                badge: p.badge
+            }));
+        } catch (error) {
+            console.error('Error loading products:', error);
+            showToast('পণ্য লোড করতে সমস্যা হয়েছে', 'error');
+            return [];
+        }
+    }
+
+    async function loginUser(email, pass) {
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Login failed');
+            }
+            
+            const data = await response.json();
+            currentUser = data.user;
+            cart = data.cart || [];
+            wishlist = data.wishlist || [];
+            
+            localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(currentUser));
+            saveToLocal();
+            
+            updateCartBadge();
+            await renderProducts();
+            showToast(`স্বাগতম ${currentUser.name}!`, "success");
+            return true;
+        } catch (error) {
+            console.error('Login error:', error);
+            showToast(error.message);
+            return false;
+        }
+    }
+
+    async function registerUser(name, email, password, confirmPassword) {
+        if (!name || !email || !password) {
+            showToast("সব তথ্য দিন");
+            return false;
+        }
+        if (password !== confirmPassword) {
+            showToast("পাসওয়ার্ড মিলছে না");
+            return false;
+        }
+        if (!email.includes("@")) {
+            showToast("ভাল ইমেইল দিন");
+            return false;
+        }
+        
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
+            
+            showToast("রেজিস্ট্রার সফল! লগইন করুন", "success");
+            return true;
+        } catch (error) {
+            console.error('Registration error:', error);
+            showToast(error.message);
+            return false;
+        }
+    }
+
+    async function addToCart(pid, size) {
+        if (!currentUser) {
+            showLoginPrompt();
+            return;
+        }
+        
+        let product = globalProducts.find(p => p.id === pid);
+        if (!product || product.stock <= 0) {
+            showToast("স্টকে নেই!");
+            return;
+        }
+        
+        let price = getProductPrice(product, size);
+        let existing = cart.find(i => i.id === pid && i.size === size);
+        
+        if (existing) {
+            existing.quantity++;
+            showToast(`${product.name} পরিমাণ বাড়ানো হয়েছে`);
+        } else {
+            cart.push({ id: pid, size, quantity: 1 });
+            showToast(`${product.name} কার্টে যোগ হয়েছে`, "success");
+        }
+        
+        try {
+            await fetch(`${API_URL}/cart/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart })
+            });
+            saveToLocal();
+            updateCartBadge();
+            renderProducts();
+        } catch (error) {
+            console.error('Error saving cart:', error);
+        }
+    }
+
+    async function toggleWishlist(pid) {
+        if (!currentUser) {
+            showLoginPrompt();
+            return;
+        }
+        
+        if (wishlist.includes(pid)) {
+            wishlist = wishlist.filter(id => id !== pid);
+            showToast("উইশলিস্ট থেকে সরানো হয়েছে");
+        } else {
+            wishlist.push(pid);
+            showToast("উইশলিস্টে যুক্ত হয়েছে!", "success");
+        }
+        
+        try {
+            await fetch(`${API_URL}/wishlist/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productIds: wishlist })
+            });
+            saveToLocal();
+            renderProducts();
+        } catch (error) {
+            console.error('Error saving wishlist:', error);
+        }
+    }
+
+    async function renderProducts() {
+        let container = document.getElementById("productsContainer");
+        if(!container) return;
+        
+        if (globalProducts.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem;">পণ্য লোড হচ্ছে...</div>';
+            return;
+        }
+        
+        let search = document.getElementById("searchInput")?.value.toLowerCase()||"";
+        let cat = document.getElementById("categoryFilter")?.value||"all";
+        let sort = document.getElementById("sortSelect")?.value||"default";
+        let filtered = globalProducts.filter(p => p.name.toLowerCase().includes(search) && (cat==="all"||p.category===cat));
+        
+        if(sort==="price_asc") filtered.sort((a,b)=>a.basePrice-b.basePrice);
+        if(sort==="price_desc") filtered.sort((a,b)=>b.basePrice-a.basePrice);
+        
+        container.innerHTML = filtered.map(p=>{
+            let inWish = currentUser ? wishlist.includes(p.id) : false;
+            let stockStat = p.stock>0?`<span class="in-stock"><i class="fas fa-check-circle"></i> স্টকে ${p.stock}টি</span>`:`<span class="out-stock"><i class="fas fa-times-circle"></i> স্টক আউট</span>`;
+            let ratingStars = Array(5).fill().map((_,i)=> `<i class="fas ${i<Math.floor(p.rating) ? 'fa-star' : (i<Math.ceil(p.rating) ? 'fa-star-half-alt' : 'fa-star')}"></i>`).join("");
+            let sizeOptions = p.sizes.map(s => `<option value="${s.name}">${s.name} - ৳${s.price}</option>`).join("");
+            
+            return `<div class="product-card">
+                ${p.badge?`<div class="badge">🏷️ ${p.badge}</div>`:''}
+                <div class="product-image-container">
+                    <img class="product-image" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://placehold.co/400x400/6366f1/white?text=${p.name}'">
+                </div>
+                <div class="product-info">
+                    <div class="product-title">${p.name}</div>
+                    <div class="price-row">
+                        <span class="current-price" id="price-${p.id}">৳${p.sizes[0].price}</span>
+                        <span class="old-price">৳${p.oldPrice}</span>
+                    </div>
+                    <div class="rating">${ratingStars} <span>(${p.rating})</span></div>
+                    <div class="stock">${stockStat}</div>
+                    <select id="size-${p.id}" class="size-select" data-product-id="${p.id}">
+                        ${sizeOptions}
+                    </select>
+                    <div class="card-buttons">
+                        <button class="btn-primary addCartBtn" data-id="${p.id}" ${p.stock===0?'disabled':''}>
+                            <i class="fas fa-cart-plus"></i> কার্ট
+                        </button>
+                        <button class="icon-btn wishBtn" data-id="${p.id}" style="background:${inWish?'#fee2e2':'var(--surface)'}">
+                            <i class="fas fa-heart" style="color:${inWish?'#ef4444':'gray'}"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+        
+        document.querySelectorAll(".size-select").forEach(select => {
+            let productId = parseInt(select.dataset.productId);
+            let product = globalProducts.find(p => p.id === productId);
+            select.addEventListener("change", (e) => {
+                let newPrice = getProductPrice(product, e.target.value);
+                let priceSpan = document.getElementById(`price-${productId}`);
+                if(priceSpan) priceSpan.innerHTML = `৳${newPrice}`;
+            });
+        });
+        
+        document.querySelectorAll(".addCartBtn").forEach(btn=>btn.addEventListener("click",(e)=>{ 
+            e.stopPropagation();
+            let id=parseInt(btn.dataset.id); 
+            let sizeSelect = document.getElementById(`size-${id}`);
+            let size = sizeSelect.value;
+            addToCart(id,size); 
+        }));
+        
+        document.querySelectorAll(".wishBtn").forEach(btn=>btn.addEventListener("click",(e)=>{ 
+            e.stopPropagation();
+            let id=parseInt(btn.dataset.id); 
+            toggleWishlist(id); 
+        }));
+    }
+
+    async function renderCartSidebar() { 
+        let cartDiv=document.getElementById("cartItemsList"); 
+        let summary=document.getElementById("cartSummary"); 
+        if(cart.length===0){ 
+            cartDiv.innerHTML='<div style="text-align:center; padding:2rem;"><i class="fas fa-shopping-cart" style="font-size:3rem;"></i><p>কার্ট খালি</p></div>'; 
+            summary.innerHTML=""; return;
+        } 
+        let itemsHtml=cart.map((item,idx)=>{ 
+            let p=globalProducts.find(p=>p.id===item.id); 
+            let itemPrice = getProductPrice(p, item.size);
+            return `<div style="border-bottom:1px solid var(--border); padding:12px 0;">
+                <div style="display:flex; gap:12px;">
+                    <img src="${p.image}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                    <div style="flex:1;">
+                        <div><strong>${p.name}</strong> (${item.size})</div>
+                        <div>৳${itemPrice} x ${item.quantity} = ৳${itemPrice*item.quantity}</div>
+                    </div>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px;">
+                    <button class="icon-btn" data-update="${idx}" data-op="inc" style="padding:5px 12px;">+</button>
+                    <button class="icon-btn" data-update="${idx}" data-op="dec" style="padding:5px 12px;">-</button>
+                    <button class="icon-btn" data-remove="${idx}" style="padding:5px 12px;"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`; 
+        }).join("");
+        cartDiv.innerHTML=itemsHtml;
+        
+        let subtotal=cart.reduce((sum,i)=>{ let p=globalProducts.find(p=>p.id===i.id); return sum+(getProductPrice(p, i.size)*i.quantity);},0);
+        let district = document.getElementById("deliveryDistrict")?.value || "";
+        let deliveryCharge = district ? getDeliveryCharge(district) : 0;
+        let total = subtotal + deliveryCharge;
+        summary.innerHTML = `<div style="margin-top:1rem; padding-top:1rem; border-top:2px solid var(--border);">
+            <div style="display:flex; justify-content:space-between;"><span>সাবটোটাল:</span><strong>৳${subtotal}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>ডেলিভারি চার্জ:</span><strong>৳${deliveryCharge}</strong></div>
+            <div style="display:flex; justify-content:space-between; font-size:1.2rem; margin-top:0.5rem;"><span>মোট:</span><strong style="color:var(--primary);">৳${total}</strong></div>
+        </div>`;
+        
+        document.querySelectorAll("[data-update]").forEach(btn=>btn.addEventListener("click",async ()=>{ 
+            let idx=parseInt(btn.dataset.update); 
+            if(btn.dataset.op==="inc") cart[idx].quantity++; 
+            else{ cart[idx].quantity--; if(cart[idx].quantity<=0) cart.splice(idx,1);} 
+            await fetch(`${API_URL}/cart/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart })
+            });
+            saveToLocal(); updateCartBadge(); renderCartSidebar(); renderProducts();
+        }));
+        document.querySelectorAll("[data-remove]").forEach(btn=>btn.addEventListener("click",async ()=>{ 
+            let idx=parseInt(btn.dataset.remove); cart.splice(idx,1); 
+            await fetch(`${API_URL}/cart/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart })
+            });
+            saveToLocal(); updateCartBadge(); renderCartSidebar(); renderProducts();
+        }));
+    }
+
+    async function confirmOrder() {
+        if(!currentUser) { showLoginPrompt(); return; }
+        let name = document.getElementById("deliveryName").value;
+        let phone = document.getElementById("deliveryPhone").value;
+        let division = document.getElementById("deliveryDivision").value;
+        let district = document.getElementById("deliveryDistrict").value;
+        let address = document.getElementById("deliveryAddress").value;
+        let payment = document.getElementById("paymentMethod").value;
+        
+        if(!name || !phone || !division || !district || !address) { showToast("সব তথ্য দিন"); return; }
+        
+        let subtotal = cart.reduce((sum,i)=>{ let p=globalProducts.find(p=>p.id===i.id); return sum+(getProductPrice(p, i.size)*i.quantity);},0);
+        let deliveryCharge = getDeliveryCharge(district);
+        let totalAmount = subtotal + deliveryCharge;
+        
+        let senderNumber = null, transactionId = null;
+        if(payment !== "cod") {
+            senderNumber = document.getElementById("senderNumber").value;
+            transactionId = document.getElementById("transactionId").value;
+            if(!senderNumber || !transactionId){ showToast("পেমেন্ট তথ্য দিন"); return; }
+        }
+        
+        const orderData = {
+            userId: currentUser.id,
+            items: cart.map(item => {
+                let p = globalProducts.find(prod => prod.id === item.id);
+                return { name: p.name, size: item.size, quantity: item.quantity, price: getProductPrice(p, item.size) };
+            }),
+            customer: { name, phone, division, district, address },
+            total: totalAmount,
+            deliveryCharge: deliveryCharge,
+            paymentMethod: payment,
+            senderNumber: senderNumber,
+            transactionId: transactionId
+        };
+        
+        try {
+            const response = await fetch(`${API_URL}/orders`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+            
+            if (!response.ok) throw new Error('Order failed');
+            
+            const order = await response.json();
+            cart = [];
+            saveToLocal();
+            updateCartBadge();
+            
+            await fetch(`${API_URL}/cart/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: [] })
+            });
+            
+            document.getElementById("checkoutModal").style.display = "none";
+            showToast(`✅ অর্ডার সম্পন্ন! আইডি: ${order.order_id}`, "success");
+            renderProducts();
+            
+            document.getElementById("deliveryName").value = "";
+            document.getElementById("deliveryPhone").value = "";
+            document.getElementById("deliveryDivision").value = "";
+            document.getElementById("deliveryDistrict").innerHTML = '<option value="">প্রথমে বিভাগ নির্বাচন করুন</option>';
+            document.getElementById("deliveryDistrict").disabled = true;
+            document.getElementById("deliveryAddress").value = "";
+            document.getElementById("senderNumber").value = "";
+            document.getElementById("transactionId").value = "";
+            document.getElementById("deliveryFeeInfo").innerHTML = `<i class="fas fa-info-circle"></i> ডেলিভারি চার্জ: জেলা নির্বাচনের পরে দেখানো হবে`;
+            
+        } catch (error) {
+            console.error('Order error:', error);
+            showToast('অর্ডার করতে সমস্যা হয়েছে');
+        }
+    }
+
+    async function renderOrdersList() { 
+        if (!currentUser) return;
+        
+        try {
+            const response = await fetch(`${API_URL}/orders/${currentUser.id}`);
+            if (!response.ok) throw new Error('Failed to load orders');
+            const ordersData = await response.json();
+            
+            let container = document.getElementById("ordersList");
+            if(ordersData.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:2rem;"><i class="fas fa-box-open" style="font-size:3rem;"></i><p>কোনো অর্ডার নেই</p></div>';
+            } else {
+                container.innerHTML = ordersData.map(o => `
+                    <div style="border-bottom:1px solid var(--border); padding:12px;">
+                        <div><strong>📦 অর্ডার #${o.order_id}</strong></div>
+                        <div>📅 ${new Date(o.created_at).toLocaleString('bn-BD')}</div>
+                        <div>💰 ৳${o.total}</div>
+                        <div>📍 ${o.customer.district}, ${o.customer.division}</div>
+                        <div>💳 ${o.payment_status}</div>
+                        <div>🚚 ${o.order_status}</div>
+                    </div>
+                `).join("");
+            }
+        } catch (error) {
+            console.error('Error loading orders:', error);
+        }
+    }
+
+    function showWishlistModal() {
+        let container = document.getElementById("wishlistItems");
+        if(wishlist.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem;"><i class="fas fa-heart-broken" style="font-size:3rem;"></i><p>উইশলিস্ট খালি</p></div>';
+        } else {
+            let wishlistProducts = globalProducts.filter(p => wishlist.includes(p.id));
+            container.innerHTML = wishlistProducts.map(p => `<div style="border-bottom:1px solid var(--border); padding:12px; display:flex; gap:12px;">
+                <img src="${p.image}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                <div style="flex:1;"><strong>${p.name}</strong><br>৳${p.basePrice}</div>
+                <button class="btn-primary removeWishBtn" data-id="${p.id}" style="padding:5px 12px;">সরান</button>
+            </div>`).join("");
+            document.querySelectorAll(".removeWishBtn").forEach(btn => btn.addEventListener("click", async () => {
+                wishlist = wishlist.filter(w => w !== parseInt(btn.dataset.id));
+                await fetch(`${API_URL}/wishlist/${currentUser.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productIds: wishlist })
+                });
+                saveToLocal(); showWishlistModal(); renderProducts();
+            }));
+        }
+        document.getElementById("wishlistModal").style.display = "flex";
+    }
+
+    function logout() { 
+        currentUser = null; 
+        localStorage.removeItem(STORAGE_KEYS.user); 
+        cart = []; 
+        wishlist = []; 
+        orders = []; 
+        updateCartBadge(); 
+        renderProducts(); 
+        showToast("লগআউট সফল!", "success"); 
+    }
+
+    async function checkAutoLogin() { 
+        let stored = localStorage.getItem(STORAGE_KEYS.user); 
+        if(stored){ 
+            currentUser = JSON.parse(stored); 
+            // Load cart and wishlist from localStorage for offline
+            cart = JSON.parse(localStorage.getItem(STORAGE_KEYS.cart+currentUser.id)||"[]");
+            wishlist = JSON.parse(localStorage.getItem(STORAGE_KEYS.wishlist+currentUser.id)||"[]");
+            updateCartBadge();
+        } 
+        await initializeApp();
+    }
+
+    async function initializeApp() {
+        globalProducts = await loadProductsFromAPI();
+        await renderProducts();
+    }
+
+    // Event Listeners
+    document.addEventListener("DOMContentLoaded", () => {
+        checkAutoLogin();
+        
+        document.getElementById("modalLoginBtn")?.addEventListener("click", async () => { 
+            if(await loginUser(document.getElementById("modalLoginEmail").value, document.getElementById("modalLoginPassword").value)) { 
+                closeAllModals(); 
+            } 
+        });
+        
+        document.getElementById("registerSubmitBtn")?.addEventListener("click", async () => { 
+            if(await registerUser(
+                document.getElementById("regName").value, 
+                document.getElementById("regEmail").value, 
+                document.getElementById("regPassword").value, 
+                document.getElementById("regConfirmPassword").value
+            )) { 
+                document.getElementById("registerModal").style.display = "none";
+                document.getElementById("loginModal").style.display = "flex";
+            }
+        });
+        
+        document.getElementById("modalSwitchToRegister")?.addEventListener("click", () => { 
+            document.getElementById("loginModal").style.display = "none"; 
+            document.getElementById("registerModal").style.display = "flex"; 
+        });
+        
+        document.getElementById("modalSwitchToLogin")?.addEventListener("click", () => { 
+            document.getElementById("registerModal").style.display = "none"; 
+            document.getElementById("loginModal").style.display = "flex"; 
+        });
+        
+        document.getElementById("closeLoginModal")?.addEventListener("click", () => document.getElementById("loginModal").style.display = "none");
+        document.getElementById("closeRegisterModal")?.addEventListener("click", () => document.getElementById("registerModal").style.display = "none");
+        document.getElementById("themeToggle")?.addEventListener("click", () => document.body.classList.toggle("dark"));
+        
+        document.getElementById("cartIconBtn")?.addEventListener("click", () => { 
+            if(!currentUser) showLoginPrompt(); 
+            else { renderCartSidebar(); document.getElementById("cartModal").style.display = "flex"; } 
+        });
+        
+        document.getElementById("closeCart")?.addEventListener("click", () => document.getElementById("cartModal").style.display = "none");
+        document.getElementById("checkoutBtn")?.addEventListener("click", () => { 
+            document.getElementById("cartModal").style.display = "none"; 
+            document.getElementById("checkoutModal").style.display = "flex"; 
+            updateAccountInfo(); 
+        });
+        
+        document.getElementById("closeCheckout")?.addEventListener("click", () => document.getElementById("checkoutModal").style.display = "none");
+        document.getElementById("confirmOrderBtn")?.addEventListener("click", confirmOrder);
+        
+        document.getElementById("userBtn")?.addEventListener("click", () => { 
+            if(currentUser) { 
+                document.getElementById("profileEmail").innerHTML = `<strong>${currentUser.name}</strong><br>📧 ${currentUser.email}`; 
+                document.getElementById("profileModal").style.display = "flex"; 
+            } else showLoginPrompt(); 
+        });
+        
+        document.getElementById("logoutBtn")?.addEventListener("click", () => { 
+            logout(); 
+            document.getElementById("profileModal").style.display = "none"; 
+        });
+        
+        document.getElementById("closeProfile")?.addEventListener("click", () => document.getElementById("profileModal").style.display = "none");
+        document.getElementById("paymentMethod")?.addEventListener("change", updateAccountInfo);
+        document.getElementById("closeOrders")?.addEventListener("click", () => document.getElementById("ordersModal").style.display = "none");
+        document.getElementById("closeWishlist")?.addEventListener("click", () => document.getElementById("wishlistModal").style.display = "none");
+        document.getElementById("deliveryDivision")?.addEventListener("change", updateDistricts);
+        document.getElementById("deliveryDistrict")?.addEventListener("change", updateDeliveryFee);
+        
+        document.querySelectorAll("[data-nav]").forEach(btn => { 
+            btn.addEventListener("click", () => { 
+                if(btn.dataset.nav === "home") renderProducts();
+                else if(btn.dataset.nav === "wishlist") { 
+                    if(currentUser) showWishlistModal(); 
+                    else showLoginPrompt(); 
+                }
+                else if(btn.dataset.nav === "orders") { 
+                    if(currentUser) { 
+                        renderOrdersList(); 
+                        document.getElementById("ordersModal").style.display = "flex"; 
+                    } else showLoginPrompt(); 
+                }
+                else if(btn.dataset.nav === "profile") { 
+                    if(currentUser) document.getElementById("profileModal").style.display = "flex"; 
+                    else showLoginPrompt(); 
+                }
+                window.scrollTo({top:0, behavior:'smooth'});
+            });
+        });
+        
+        window.addEventListener("scroll", () => { 
+            document.getElementById("scrollTopBtn").style.display = window.scrollY > 200 ? "flex" : "none"; 
+        });
+        
+        document.getElementById("scrollTopBtn")?.addEventListener("click", () => window.scrollTo({top:0, behavior:"smooth"}));
+        document.getElementById("searchInput")?.addEventListener("input", () => renderProducts());
+        document.getElementById("categoryFilter")?.addEventListener("change", () => renderProducts());
+        document.getElementById("sortSelect")?.addEventListener("change", () => renderProducts());
+        
+        document.getElementById("logoHome")?.addEventListener("click", () => {
+            renderProducts();
+            window.scrollTo({top:0, behavior:'smooth'});
+        });
+    });
+</script>
+</body>
+</html>

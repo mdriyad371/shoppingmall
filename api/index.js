@@ -56,14 +56,20 @@ app.post('/api/products', async (req, res) => {
     try {
         const { name, category, basePrice, oldPrice, stock, image, rating, badge, sizes } = req.body;
         
+        if (!name || !category || !basePrice || !image) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        console.log('Creating product:', { name, category, basePrice, stock });
+        
         const { data, error } = await supabase
             .from('products')
             .insert([{
                 name,
                 category,
                 base_price: basePrice,
-                old_price: oldPrice,
-                stock,
+                old_price: oldPrice || null,
+                stock: stock || 0,
                 image,
                 rating: rating || 4.0,
                 badge: badge || '',
@@ -74,6 +80,7 @@ app.post('/api/products', async (req, res) => {
         if (error) throw error;
         res.json(data[0]);
     } catch (error) {
+        console.error('Product create error:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -81,6 +88,8 @@ app.post('/api/products', async (req, res) => {
 app.put('/api/products/:id', async (req, res) => {
     try {
         const { name, category, basePrice, oldPrice, stock, image, rating, badge, sizes } = req.body;
+        
+        console.log('Updating product:', req.params.id, { name, category, basePrice, stock });
         
         const { data, error } = await supabase
             .from('products')
@@ -91,9 +100,9 @@ app.put('/api/products/:id', async (req, res) => {
                 old_price: oldPrice,
                 stock,
                 image,
-                rating,
-                badge,
-                sizes
+                rating: rating || 4.0,
+                badge: badge || '',
+                sizes: sizes || [{ name: "Standard", price: basePrice }]
             })
             .eq('id', req.params.id)
             .select();
@@ -101,6 +110,7 @@ app.put('/api/products/:id', async (req, res) => {
         if (error) throw error;
         res.json(data[0]);
     } catch (error) {
+        console.error('Product update error:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -128,7 +138,7 @@ app.post('/api/auth/register', async (req, res) => {
             .from('users')
             .select('id')
             .eq('email', email)
-            .single();
+            .maybeSingle();
         
         if (existingUser) {
             return res.status(400).json({ error: 'User already exists' });
@@ -164,7 +174,7 @@ app.post('/api/auth/login', async (req, res) => {
             .select('*')
             .eq('email', email)
             .eq('password', password)
-            .single();
+            .maybeSingle();
         
         if (error || !data) {
             return res.status(401).json({ error: 'Invalid credentials' });
@@ -174,13 +184,13 @@ app.post('/api/auth/login', async (req, res) => {
             .from('carts')
             .select('items')
             .eq('user_id', data.id)
-            .single();
+            .maybeSingle();
         
         const { data: wishlist } = await supabase
             .from('wishlists')
             .select('product_ids')
             .eq('user_id', data.id)
-            .single();
+            .maybeSingle();
         
         res.json({
             user: {
@@ -204,12 +214,24 @@ app.get('/api/cart/:userId', async (req, res) => {
             .from('carts')
             .select('items')
             .eq('user_id', req.params.userId)
-            .single();
+            .maybeSingle();
         
         if (error) throw error;
-        res.json(data?.items || []);
+        
+        if (!data) {
+            const { data: newCart, error: insertError } = await supabase
+                .from('carts')
+                .insert([{ user_id: req.params.userId, items: [] }])
+                .select();
+            
+            if (insertError) throw insertError;
+            res.json([]);
+        } else {
+            res.json(data.items || []);
+        }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Cart GET error:', error);
+        res.status(500).json({ error: error.message, items: [] });
     }
 });
 
@@ -217,15 +239,33 @@ app.put('/api/cart/:userId', async (req, res) => {
     try {
         const { items } = req.body;
         
-        const { data, error } = await supabase
+        const { data: existingCart } = await supabase
             .from('carts')
-            .update({ items, updated_at: new Date() })
+            .select('id')
             .eq('user_id', req.params.userId)
-            .select();
+            .maybeSingle();
         
-        if (error) throw error;
-        res.json(data[0]?.items || []);
+        let result;
+        if (!existingCart) {
+            const { data, error } = await supabase
+                .from('carts')
+                .insert([{ user_id: req.params.userId, items: items }])
+                .select();
+            if (error) throw error;
+            result = data;
+        } else {
+            const { data, error } = await supabase
+                .from('carts')
+                .update({ items, updated_at: new Date() })
+                .eq('user_id', req.params.userId)
+                .select();
+            if (error) throw error;
+            result = data;
+        }
+        
+        res.json(result?.[0]?.items || []);
     } catch (error) {
+        console.error('Cart PUT error:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -237,12 +277,24 @@ app.get('/api/wishlist/:userId', async (req, res) => {
             .from('wishlists')
             .select('product_ids')
             .eq('user_id', req.params.userId)
-            .single();
+            .maybeSingle();
         
         if (error) throw error;
-        res.json(data?.product_ids || []);
+        
+        if (!data) {
+            const { data: newWishlist, error: insertError } = await supabase
+                .from('wishlists')
+                .insert([{ user_id: req.params.userId, product_ids: [] }])
+                .select();
+            
+            if (insertError) throw insertError;
+            res.json([]);
+        } else {
+            res.json(data.product_ids || []);
+        }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Wishlist GET error:', error);
+        res.status(500).json({ error: error.message, product_ids: [] });
     }
 });
 
@@ -250,15 +302,33 @@ app.put('/api/wishlist/:userId', async (req, res) => {
     try {
         const { productIds } = req.body;
         
-        const { data, error } = await supabase
+        const { data: existingWishlist } = await supabase
             .from('wishlists')
-            .update({ product_ids: productIds, updated_at: new Date() })
+            .select('id')
             .eq('user_id', req.params.userId)
-            .select();
+            .maybeSingle();
         
-        if (error) throw error;
-        res.json(data[0]?.product_ids || []);
+        let result;
+        if (!existingWishlist) {
+            const { data, error } = await supabase
+                .from('wishlists')
+                .insert([{ user_id: req.params.userId, product_ids: productIds }])
+                .select();
+            if (error) throw error;
+            result = data;
+        } else {
+            const { data, error } = await supabase
+                .from('wishlists')
+                .update({ product_ids: productIds, updated_at: new Date() })
+                .eq('user_id', req.params.userId)
+                .select();
+            if (error) throw error;
+            result = data;
+        }
+        
+        res.json(result?.[0]?.product_ids || []);
     } catch (error) {
+        console.error('Wishlist PUT error:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -361,7 +431,7 @@ app.post('/api/admin/login', async (req, res) => {
             .eq('email', email)
             .eq('password', password)
             .eq('role', 'admin')
-            .single();
+            .maybeSingle();
         
         if (error || !data) {
             return res.status(401).json({ error: 'Invalid admin credentials' });
